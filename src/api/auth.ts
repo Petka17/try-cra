@@ -12,7 +12,7 @@ export const createCodeRequestBody = (phone: string): { phone: string } => ({
 
 export const codeRequestDecoder = _.field("external_id", _.string);
 
-export const codeRequest = (phone: string) =>
+export const codeRequest = (phone: string): Promise<string> =>
   makeRequest(
     codeRequestUrl,
     "post",
@@ -34,7 +34,7 @@ export const createLoginWithCodeBody = (
   profile_type: "employer"
 });
 
-export const loginWithCode = (phone: string, code: string) =>
+export const loginWithCode = (phone: string, code: string): Promise<string> =>
   makeRequest(
     loginWithCodeUrl,
     "post",

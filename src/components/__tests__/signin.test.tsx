@@ -30,6 +30,7 @@ jest.mock("../../api/auth", () => {
 const mockCodeRequest: jest.Mock = codeRequest as jest.Mock;
 const mockLoginWithCode: jest.Mock = loginWithCode as jest.Mock;
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const renderPage = (phone = "") => {
   const utils = render(<SigninPage />);
   const phoneInput = utils.getByLabelText(/Телефон/) as HTMLInputElement;
