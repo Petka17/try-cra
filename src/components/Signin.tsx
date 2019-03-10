@@ -2,7 +2,7 @@ import React from "react";
 import layout from "components/layout";
 import * as auth from "state/auth";
 
-function SigninPage() {
+function SigninPage(): React.ReactElement {
   const {
     canStartCodeRequest,
     phone,
@@ -15,16 +15,22 @@ function SigninPage() {
     isLoading
   } = auth.getContext();
 
-  const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoneChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     setPhone(event.target.value);
   };
 
-  const handleSubmitForm = (event: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmitForm = (
+    event: React.ChangeEvent<HTMLFormElement>
+  ): void => {
     event.preventDefault();
     startCodeRequest();
   };
 
-  const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCodeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     setCode(event.target.value);
   };
 

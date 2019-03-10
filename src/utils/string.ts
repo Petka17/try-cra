@@ -1,4 +1,4 @@
-function digitOnly(phone: string) {
+function digitOnly(phone: string): string {
   return phone.replace(/\D/g, "");
 }
 

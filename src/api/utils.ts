@@ -22,10 +22,10 @@ const falseVal = new Decoder<false>(v =>
  *    }
  * }
  */
-type DecodedSucceedResponseData = {
+interface DecodedSucceedResponseData {
   success: true;
   data: Maybe<any>;
-};
+}
 
 type DecodeResult = [DecodedSucceedResponseData | null, string];
 
@@ -41,10 +41,10 @@ export const succeedResponseDecoder: Decoder<
  *    "message": "Error test"
  * }
  */
-type DecodedFailedResponseData = {
+interface DecodedFailedResponseData {
   success: false;
   errorMessage: string;
-};
+}
 
 type DecodeFailedResult = [DecodedFailedResponseData | null, string];
 

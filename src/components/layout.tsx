@@ -1,7 +1,9 @@
 import React from "react";
 import * as auth from "state/auth";
 
-function layout(Component: typeof React.Component | React.FC) {
+function layout(
+  Component: typeof React.Component | React.FC
+): () => React.ReactElement {
   return () => (
     <auth.Provider>
       <Component />

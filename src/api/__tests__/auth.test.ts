@@ -48,8 +48,8 @@ test("when http request for new code succeed requestCode should return external 
 
   const response = await codeRequest(phone);
 
-  expect(mockedAxios).toBeCalledTimes(1);
-  expect(mockedAxios).toBeCalledWith({
+  expect(mockedAxios).toHaveBeenCalledTimes(1);
+  expect(mockedAxios).toHaveBeenCalledWith({
     url: codeRequestUrl,
     method: "post",
     data: requestBody
@@ -57,7 +57,7 @@ test("when http request for new code succeed requestCode should return external 
   expect(response).toBe(externalId);
 });
 
-test("when http request for the new code succeed but in the response success field equal false then requestCode should fail", async () => {
+test("when http request for the new code succeed but in the response success field equal false then requestCode should fail", async done => {
   const message = "Пользователь не найден";
   mockedAxios.mockResolvedValue(
     Promise.reject({
@@ -74,11 +74,12 @@ test("when http request for the new code succeed but in the response success fie
 
   await codeRequest("75551231212")
     .then(() => {
-      fail();
+      done.fail("Unreachable branch");
     })
     .catch(e => {
       expect(e).toBeInstanceOf(Error);
       expect(e.message).toBe(message);
+      done();
     });
 });
 
@@ -104,8 +105,8 @@ test("when http request for login with code succeed loginWith should return auth
 
   const response = await loginWithCode(phone, code);
 
-  expect(mockedAxios).toBeCalledTimes(1);
-  expect(mockedAxios).toBeCalledWith({
+  expect(mockedAxios).toHaveBeenCalledTimes(1);
+  expect(mockedAxios).toHaveBeenCalledWith({
     url: loginWithCodeUrl,
     method: "post",
     data: requestBody
@@ -113,7 +114,7 @@ test("when http request for login with code succeed loginWith should return auth
   expect(response).toBe(authToken);
 });
 
-test("when http request for the new code succeed but in the response success field equal false then requestCode should fail", async () => {
+test("when http request for login with code succeed but in the response success field equal false then loginWihCode should fail", async done => {
   const phone = "75551231212";
   const code = "1234";
 
@@ -133,10 +134,11 @@ test("when http request for the new code succeed but in the response success fie
 
   await loginWithCode(phone, code)
     .then(() => {
-      fail();
+      done.fail();
     })
     .catch(e => {
       expect(e).toBeInstanceOf(Error);
       expect(e.message).toBe(message);
+      done();
     });
 });

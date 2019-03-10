@@ -10,7 +10,6 @@ export class SetPhone implements BaseAction {
 
 export class StartCodeRequest implements BaseAction {
   readonly type = "START_CODE_REQUEST";
-  constructor() {}
 }
 
 export class CodeRequestSuccess implements BaseAction {
@@ -30,12 +29,10 @@ export class SetCode implements BaseAction {
 
 export class StartLoginWithCode implements BaseAction {
   readonly type = "START_LOGIN_WITH_CODE";
-  constructor() {}
 }
 
 export class LoginWithCodeSuccess implements BaseAction {
   readonly type = "LOGIN_WITH_CODE_SUCCESS";
-  constructor() {}
 }
 
 export class LoginWithCodeFail implements BaseAction {

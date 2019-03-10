@@ -30,7 +30,10 @@ const createAxiosError = (response: AxiosResponse): AxiosError => ({
   response
 });
 
-const makeRequestErrorCheck = async (msg: string | RegExp) => {
+const makeRequestErrorCheck = async (
+  msg: string | RegExp,
+  fail: (error: string) => void
+): Promise<void> => {
   await makeRequest("/", "post", {}, _.string)
     .then(() => {
       fail("It should fail");
@@ -52,7 +55,7 @@ const makeRequestErrorCheck = async (msg: string | RegExp) => {
  *    "message": "Something went wrong"
  * }
  */
-test("Reject with correct message", async () => {
+test("Reject with correct message", async done => {
   const message = "Something went wrong";
   const statusText = "Error on the server";
 
@@ -63,7 +66,9 @@ test("Reject with correct message", async () => {
       )
     )
   );
-  await makeRequestErrorCheck(message);
+  await makeRequestErrorCheck(message, done.fail);
+
+  done();
 });
 
 /**
@@ -73,7 +78,7 @@ test("Reject with correct message", async () => {
  *    "success": false
  * }
  */
-test("Reject with no message", async () => {
+test("Reject with no message", async done => {
   const statusText = "Error on the server";
 
   mockedAxios.mockResolvedValueOnce(
@@ -81,7 +86,9 @@ test("Reject with no message", async () => {
       createAxiosError(createAxiosResponse({ success: false }, 500, statusText))
     )
   );
-  await makeRequestErrorCheck(statusText);
+  await makeRequestErrorCheck(statusText, done.fail);
+
+  done();
 });
 
 /**
@@ -98,7 +105,7 @@ test("Reject with no message", async () => {
  *    "message": 123
  * }
  */
-test("Reject with incorrect server data format", async () => {
+test("Reject with incorrect server data format", async done => {
   const statusText = "Error on the server";
 
   mockedAxios.mockResolvedValueOnce(
@@ -108,14 +115,14 @@ test("Reject with incorrect server data format", async () => {
       )
     )
   );
-  await makeRequestErrorCheck(statusText);
+  await makeRequestErrorCheck(statusText, done.fail);
 
   mockedAxios.mockResolvedValueOnce(
     Promise.reject(
       createAxiosError(createAxiosResponse({ success: true }, 500, statusText))
     )
   );
-  await makeRequestErrorCheck(statusText);
+  await makeRequestErrorCheck(statusText, done.fail);
 
   mockedAxios.mockResolvedValueOnce(
     Promise.reject(
@@ -124,17 +131,21 @@ test("Reject with incorrect server data format", async () => {
       )
     )
   );
-  await makeRequestErrorCheck(statusText);
+  await makeRequestErrorCheck(statusText, done.fail);
+
+  done();
 });
 
 /**
  * Reject with no response
  */
-test("Reject with no response", async () => {
+test("Reject with no response", async done => {
   const unknownError = "Unknown server error";
 
   mockedAxios.mockResolvedValueOnce(Promise.reject({}));
-  await makeRequestErrorCheck(unknownError);
+  await makeRequestErrorCheck(unknownError, done.fail);
+
+  done();
 });
 
 /**
@@ -146,7 +157,7 @@ test("Reject with no response", async () => {
  *    }
  * }
  */
-test("Resolve with correct data", async () => {
+test("Resolve with correct data", async done => {
   const field = "value";
 
   mockedAxios.mockResolvedValue(
@@ -158,8 +169,10 @@ test("Resolve with correct data", async () => {
       expect(result).toBe(field);
     })
     .catch(e => {
-      fail(`makeRequest failed with error: ${e}`);
+      done.fail(`makeRequest failed with error: ${e}`);
     });
+
+  done();
 });
 
 /**
@@ -168,7 +181,7 @@ test("Resolve with correct data", async () => {
  *    "success": true
  * }
  */
-test("Resolve with null data and it is expected", async () => {
+test("Resolve with null data and it is expected", async done => {
   mockedAxios.mockResolvedValue(
     Promise.resolve(createAxiosResponse({ success: true }))
   );
@@ -178,8 +191,10 @@ test("Resolve with null data and it is expected", async () => {
       expect(true).toBe(true);
     })
     .catch(e => {
-      fail(`makeRequest failed with error: ${e}`);
+      done.fail(`makeRequest failed with error: ${e}`);
     });
+
+  done();
 });
 
 /**
@@ -191,14 +206,16 @@ test("Resolve with null data and it is expected", async () => {
  *    }
  * }
  */
-test("Resolve with data which is not comply with decoder", async () => {
+test("Resolve with data which is not comply with decoder", async done => {
   const field = "value";
 
   mockedAxios.mockResolvedValue(
     Promise.resolve(createAxiosResponse({ success: true, data: { field } }))
   );
 
-  await makeRequestErrorCheck(/expected to find a string/);
+  await makeRequestErrorCheck(/expected to find a string/, done.fail);
+
+  done();
 });
 
 /**
@@ -207,12 +224,14 @@ test("Resolve with data which is not comply with decoder", async () => {
  *    "success": true
  * }
  */
-test("Resolve with null data and it is not expected", async () => {
+test("Resolve with null data and it is not expected", async done => {
   mockedAxios.mockResolvedValue(
     Promise.resolve(createAxiosResponse({ success: true }))
   );
 
-  await makeRequestErrorCheck(/expected to find a string/);
+  await makeRequestErrorCheck(/expected to find a string/, done.fail);
+
+  done();
 });
 
 /**
@@ -224,16 +243,18 @@ test("Resolve with null data and it is not expected", async () => {
  *    "success": "true"
  * }
  */
-test("Resolve with incorrect server data format", async () => {
+test("Resolve with incorrect server data format", async done => {
   mockedAxios.mockResolvedValue(
     Promise.resolve(createAxiosResponse({ success: false }))
   );
 
-  await makeRequestErrorCheck(/expected true value/);
+  await makeRequestErrorCheck(/expected true value/, done.fail);
 
   mockedAxios.mockResolvedValue(
     Promise.resolve(createAxiosResponse({ success: "true" }))
   );
 
-  await makeRequestErrorCheck(/expected true value/);
+  await makeRequestErrorCheck(/expected true value/, done.fail);
+
+  done();
 });

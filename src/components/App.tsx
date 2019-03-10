@@ -2,20 +2,20 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Signin from "components/Signin";
 
-function Index() {
+function Index(): React.ReactElement {
   return <h2>Home</h2>;
 }
 
-function About() {
+function About(): React.ReactElement {
   return <h2>About</h2>;
 }
 
-function Users() {
+function Users(): React.ReactElement {
   return <h2>Users</h2>;
 }
 
 class App extends React.Component {
-  render() {
+  render(): React.ReactElement {
     return (
       <Router>
         <div>

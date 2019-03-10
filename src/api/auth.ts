@@ -6,7 +6,7 @@ import { makeRequest } from "./utils";
  */
 export const codeRequestUrl = "/api/login/request_code";
 
-export const createCodeRequestBody = (phone: string) => ({
+export const createCodeRequestBody = (phone: string): { phone: string } => ({
   phone
 });
 
@@ -25,7 +25,10 @@ export const codeRequest = (phone: string) =>
  */
 export const loginWithCodeUrl = "/api/login/with_code";
 
-export const createLoginWithCodeBody = (phone: string, code: string) => ({
+export const createLoginWithCodeBody = (
+  phone: string,
+  code: string
+): { phone: string; code: string; profile_type: "employer" } => ({
   phone,
   code,
   profile_type: "employer"
@@ -45,7 +48,7 @@ export const loginWithCode = (phone: string, code: string) =>
 
 /* istanbul ignore next */
 export const getUserForToken = (): Promise<string> =>
-  new Promise((resolve, _) => {
+  new Promise(resolve => {
     console.log("run promise");
     setTimeout(() => {
       console.log("resolve promise");

@@ -8,7 +8,7 @@ jest.mock("../../api/auth", () => {
   return {
     codeRequest: jest.fn(
       () =>
-        new Promise((resolve, _) => {
+        new Promise(resolve => {
           const timer = setTimeout(() => {
             clearTimeout(timer);
             resolve("auth_token");
@@ -17,7 +17,7 @@ jest.mock("../../api/auth", () => {
     ),
     loginWithCode: jest.fn(
       () =>
-        new Promise((resolve, _) => {
+        new Promise(resolve => {
           let wait = setTimeout(() => {
             clearTimeout(wait);
             resolve("auth_token");
@@ -37,7 +37,7 @@ const renderPage = (phone = "") => {
     /Запросить код/
   ) as HTMLButtonElement;
 
-  const fillPhone = (phone: string) => {
+  const fillPhone = (phone: string): void => {
     fireEvent.change(phoneInput, { target: { value: phone } });
   };
 
@@ -96,8 +96,8 @@ test("When submit button is clicked, code request should fire and button should 
 
   fireEvent.click(requestCodeButton);
 
-  expect(mockCodeRequest).toBeCalledTimes(1);
-  expect(mockCodeRequest).toBeCalledWith(phone);
+  expect(mockCodeRequest).toHaveBeenCalledTimes(1);
+  expect(mockCodeRequest).toHaveBeenCalledWith(phone);
 
   expect(requestCodeButton).toBeDisabled();
 
@@ -150,8 +150,8 @@ test("When submit button is clicked and code request fire and code input should 
   fireEvent.change(codeInput, { target: { value: code } });
 
   expect(codeInput.value).toBe(clearCode);
-  expect(mockLoginWithCode).toBeCalledTimes(1);
-  expect(mockLoginWithCode).toBeCalledWith(phone, clearCode);
+  expect(mockLoginWithCode).toHaveBeenCalledTimes(1);
+  expect(mockLoginWithCode).toHaveBeenCalledWith(phone, clearCode);
 
   await wait(() => expect(getByText(error.message)).toBeInTheDocument(), {
     timeout: 100
@@ -162,8 +162,8 @@ test("When submit button is clicked and code request fire and code input should 
   fireEvent.change(codeInput, { target: { value: "" } });
   fireEvent.change(codeInput, { target: { value: correctCode } });
 
-  expect(mockLoginWithCode).toBeCalledTimes(1);
-  expect(mockLoginWithCode).toBeCalledWith(phone, correctCode);
+  expect(mockLoginWithCode).toHaveBeenCalledTimes(1);
+  expect(mockLoginWithCode).toHaveBeenCalledWith(phone, correctCode);
 
   await wait(() => expect(codeInput).toBeDisabled(), { timeout: 50 });
   await wait(
